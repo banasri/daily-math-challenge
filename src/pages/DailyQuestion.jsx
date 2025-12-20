@@ -121,7 +121,7 @@ export default function DailyQuestion() {
         <span>
           Welcome, <strong id="username">{user.displayName}</strong>
           &nbsp;|&nbsp;
-          <a href="#" onClick={logout}>Logout</a>
+          <a href="#" style={{ color: "#c4c5e2" }} onClick={logout}>Logout</a>
         </span>
         <div style={{ marginLeft: "auto" }}>
           {userProfile.playedStreak > 0 && (
@@ -176,15 +176,15 @@ export default function DailyQuestion() {
                         cursor: submitted ? "default" : "pointer",
                         color: "#333",
                         border:
-                          selectedOption === idx
+                          selected === idx
                             ? "2px solid #333"
                             : "1px solid #ccc",
                         backgroundColor:
                           submitted && idx === question.correctOption
                             ? "#17b60bff" // green for correct
-                            : submitted && idx === selectedOption
+                            : submitted && idx === selected
                               ? "#f7c5c5" // red for wrong selected
-                              : selectedOption === idx
+                              : selected === idx
                                 ? "#e0e0e0" // selected but not submitted
                                 : "#fff",
                       }}
@@ -197,9 +197,9 @@ export default function DailyQuestion() {
               {submitted && (
                 <div style={{ marginTop: 10 }}>
                   {isCorrect ? (
-                    <p style={{ color: "green" }}>🎉 Congratulations! Your name appears in today’s Hall of Fame (Leaderboard).</p>
+                    <p style={{ color: "#750426ff" }}>🎉 Congratulations! Your name appears in today’s Hall of Fame (Leaderboard).</p>
                   ) : (
-                    <p style={{ color: "red" }}>
+                    <p style={{ color: "#47d1e4" }}>
                       Good try! Come back tomorrow for a new challenge. The correct answer is option{" "}
                       {question.correctOption + 1}.
                     </p>

@@ -8,8 +8,8 @@ export default function Header() {
 
       <div className="hero-overlay">
         <div className="hero-text-container">
-          <h1>Ramanujan DMC</h1>
-          <p>Daily Math Challenge for Curious Minds</p>
+          <h1>Ramanujan Daily Math Challenge</h1>
+          <p>Uncover the beauty hidden in every problem.</p>
 
           <div className="hero-nav">
             <NavLink

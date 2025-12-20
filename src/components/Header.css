@@ -23,7 +23,7 @@
 .hero-text-container {
   max-width: 1200px;
   margin: auto;
-  text-align: center;           /* center text over image */
+  text-align: left;           /* center text over image */
 }
 
 .hero-text-container h1 {
