@@ -1,0 +1,7 @@
+/* src/styles/dailyQuestion.css */
+
+.daily-question img {
+  background: white;
+  padding: 8px;
+  border-radius: 12px;
+}

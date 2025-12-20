@@ -1,0 +1,83 @@
+.hero-header {
+  width: 100%;
+  min-height: 150px;           /* adjust height as needed */
+  padding: 40px 20px;
+  background: linear-gradient(
+      34deg,
+      rgba(204 , 206 , 206, 0.7),
+      rgba(58, 125, 138, 0.7),
+      rgba(109, 40, 217, 0)
+    ),
+    url('/ramanujan.png') no-repeat center right; /* full-width background image */
+  background-size: contain;       /* makes it span entire width & height */
+  color: white;
+  margin: 0;
+  /* position: sticky; */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+
+.hero-text-container {
+  max-width: 1200px;
+  margin: auto;
+  text-align: center;           /* center text over image */
+}
+
+.hero-text-container h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.hero-text-container p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.hero-nav {
+  margin-top: 20px;
+}
+
+.hero-btn {
+  display: inline-block;
+  margin-right: 12px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: transparent;
+  border: 2px solid #facc15;
+  color: #facc15;
+}
+
+.hero-btn.secondary {
+  background: transparent;
+  border: 2px solid #facc15;
+  color: #facc15;
+}
+
+.hero-btn.active {
+  background: #facc15;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.4);
+  transform: translateY(-1px);
+}
+
+.hero-btn.secondary.active {
+  background: #facc15;
+  color: #fff;
+}
+.hero-btn.secondary:hover {
+  color: #646cff;
+}
+
+/* 📱 Mobile */
+@media (max-width: 768px) {
+  .hero-text-container h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-text-container p {
+    font-size: 1rem;
+  }
+}
