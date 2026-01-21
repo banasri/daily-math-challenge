@@ -6,6 +6,10 @@ import { getTodayQuestion } from "../services/questionService";
 import { isAccessActive } from "../utils/subscription";
 import confetti from "canvas-confetti";
 import { updatePlayedStreak } from "../services/submissionService";
+import Lottie from "lottie-react";
+import coinRewardAnim from "../lottie/coin_reward.json";
+import { useRef } from "react";
+import Wallet from "../components/MyWallet";
 
 export default function DailyQuestion() {
   const { user, logout } = useAuth();
@@ -19,6 +23,41 @@ export default function DailyQuestion() {
   const [hasAccess, setHasAccess] = useState(true);
   const [userProfile, setUserProfile] = useState(null);
   const [streak, setStreak] = useState(null);
+  const [showRewardAnim, setShowRewardAnim] = useState(false);
+  const [rewardCoins, setRewardCoins] = useState(0);
+  const walletRef = useRef(null);
+  const [walletPulse, setWalletPulse] = useState(false);
+  const [flyingCoin, setFlyingCoin] = useState(null);
+  // { start: {x,y}, end: {x,y} }
+
+  const rewardOverlayStyle = {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.45)",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 9999,
+  };
+
+  const coinWrapperStyle = {
+    position: "relative",
+    width: 200,
+    height: 200,
+  };
+
+  const coinTextStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    fontSize: 32,
+    fontWeight: 800,
+    color: "#7a4b00",
+    textShadow: "0 2px 4px rgba(0,0,0,0.25)",
+    pointerEvents: "none",
+  };
 
 
   useEffect(() => {
@@ -47,9 +86,11 @@ export default function DailyQuestion() {
 
         if (subSnap.exists()) {
           const data = subSnap.data();
+          console.log("Previous submission data:", data);
           setSubmitted(true);
           setIsCorrect(data.isCorrect);          // ✅ restore correctness
           setSelectedOption(data.selectedOption); // ✅ restore selection
+          setSelected(data.selectedOption);
         }
       }
 
@@ -72,6 +113,42 @@ export default function DailyQuestion() {
     // 3️⃣ Update state
     setIsCorrect(isCorrect);   // ✅ store result
     setSubmitted(true);
+
+    // 🎯 Base coins for attempting
+    isCorrect ? setRewardCoins(10) : setRewardCoins(2);
+    setShowRewardAnim(true);
+
+    // 🎯 Bonus coins if correct
+    setTimeout(() => {
+      // if (isCorrect) {
+      //   setRewardCoins(10); // 2 + 8
+      // }
+
+      // Close animation
+      setTimeout(() => {
+        setShowRewardAnim(false);
+      }, 900);
+
+      setTimeout(() => {
+        const walletRect = walletRef.current.getBoundingClientRect();
+
+        setFlyingCoin({
+          start: {
+            x: window.innerWidth / 2 - 30,
+            y: window.innerHeight / 2 - 30,
+          },
+          end: {
+            x: walletRect.left + walletRect.width / 2 - 30,
+            y: walletRect.top + walletRect.height / 2 - 30,
+          },
+        });
+      }, 800);
+
+    }, 700);
+
+
+
+
     // 4️⃣ Save submission
     await setDoc(doc(db, "submissions", submissionId), {
       userId: user.uid,
@@ -83,14 +160,14 @@ export default function DailyQuestion() {
       isCorrect,
       submittedAt: serverTimestamp(),
     });
-    if (isCorrect) {
-      setTimeout(() => confetti({
-        particleCount: 120,
-        spread: 70,
-        origin: { y: 0.6 }
-      }), 300);
+    // if (isCorrect) {
+    //   setTimeout(() => confetti({
+    //     particleCount: 120,
+    //     spread: 70,
+    //     origin: { y: 0.6 }
+    //   }), 300);
 
-    }
+    // }
     // // 5️⃣ Start trial on first submission
     // const userRef = doc(db, "users", user.uid);
     // const userSnap = await getDoc(userRef);
@@ -114,6 +191,66 @@ export default function DailyQuestion() {
   };
 
   if (loading) return <p>Loading...</p>;
+  const RewardOverlay = () => {
+    if (!showRewardAnim) return null;
+
+    return (
+      <div style={rewardOverlayStyle}>
+        <div style={coinWrapperStyle}>
+          <Lottie
+            animationData={coinRewardAnim}
+            loop={false}
+            style={{ width: 200, height: 200 }}
+          />
+
+          {/* 🔢 Coin Text Overlay */}
+          <div style={coinTextStyle}>
+            +{rewardCoins}
+          </div>
+        </div>
+      </div>
+    );
+  };
+  const FlyingCoin = ({ start, end, onComplete }) => {
+    const [pos, setPos] = useState(start);
+
+    useEffect(() => {
+      const startTime = performance.now();
+      const duration = 700;
+
+      const animate = (now) => {
+        const t = Math.min((now - startTime) / duration, 1);
+        const ease = t * (2 - t);
+
+        setPos({
+          x: start.x + (end.x - start.x) * ease,
+          y: start.y + (end.y - start.y) * ease,
+        });
+
+        if (t < 1) requestAnimationFrame(animate);
+        else onComplete();
+      };
+
+      requestAnimationFrame(animate);
+    }, []);
+
+    return (
+      <Lottie
+        animationData={coinRewardAnim}
+        loop={false}
+        style={{
+          width: 60,
+          height: 60,
+          position: "fixed",
+          left: pos.x,
+          top: pos.y,
+          pointerEvents: "none",
+          zIndex: 10000,
+        }}
+      />
+    );
+  };
+
 
   return (
     <> {/* Header */}
@@ -124,11 +261,11 @@ export default function DailyQuestion() {
           <a href="#" style={{ color: "#c4c5e2" }} onClick={logout}>Logout</a>
         </span>
         <div style={{ marginLeft: "auto" }}>
-          {userProfile.playedStreak > 0 && (
-            <span className="streak">
-              🔥 Your Current Streak is {streak} {streak === 1 ? "day" : "days"}
-            </span>
-          )}
+          <Wallet
+            ref={walletRef}
+            coins={userProfile?.coins || 0}
+            pulse={walletPulse}
+          />
         </div>
       </div>
       <div style={{ padding: 20, maxWidth: 600, margin: "0 auto" }}>
@@ -183,7 +320,7 @@ export default function DailyQuestion() {
                           submitted && idx === question.correctOption
                             ? "#17b60bff" // green for correct
                             : submitted && idx === selected
-                              ? "#f7c5c5" // red for wrong selected
+                              ? "#f56767ff" // red for wrong selected
                               : selected === idx
                                 ? "#e0e0e0" // selected but not submitted
                                 : "#fff",
@@ -197,9 +334,9 @@ export default function DailyQuestion() {
               {submitted && (
                 <div style={{ marginTop: 10 }}>
                   {isCorrect ? (
-                    <p style={{ color: "#750426ff" }}>🎉 Congratulations! Your name appears in today’s Hall of Fame (Leaderboard).</p>
+                    <p style={{ color: "#ceffff" }}>🎉 Congratulations! Your name appears in today’s Hall of Fame (Leaderboard).</p>
                   ) : (
-                    <p style={{ color: "#47d1e4" }}>
+                    <p style={{ color: "#ffc0ce" }}>
                       Good try! Come back tomorrow for a new challenge. The correct answer is option{" "}
                       {question.correctOption + 1}.
                     </p>
@@ -237,6 +374,19 @@ export default function DailyQuestion() {
           )}
 
       </div>
+      <RewardOverlay />
+      {flyingCoin && (
+        <FlyingCoin
+          start={flyingCoin.start}
+          end={flyingCoin.end}
+          onComplete={() => {
+            setFlyingCoin(null);
+            setWalletPulse(true);
+            setTimeout(() => setWalletPulse(false), 300);
+          }}
+        />
+      )}
+
     </>
   );
 }

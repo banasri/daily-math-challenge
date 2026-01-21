@@ -10,6 +10,10 @@ lerna-debug.log*
 # dependencies
 node_modules/
 
+# Firebase admin secrets & scripts
+/scripts/serviceAccountKey.json
+/scripts/*.json
+
 # env files
 .env
 .env.local

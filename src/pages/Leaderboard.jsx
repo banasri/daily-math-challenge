@@ -38,7 +38,7 @@ export default function Leaderboard() {
             <li key={idx} style={{ marginBottom: 10 }}>
               <strong>{e.fullName}</strong>
               {e.grade && (
-                <span style={{ color: "#666" }}>
+                <span style={{ color: "#d6e2db" }}>
                   {" "}— Grade {e.grade}
                 </span>
               )}
