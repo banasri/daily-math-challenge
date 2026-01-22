@@ -26,6 +26,7 @@ export default function DailyQuestion() {
   const [userProfile, setUserProfile] = useState(null);
   const [streak, setStreak] = useState(null);
   const [showRewardAnim, setShowRewardAnim] = useState(false);
+  const [showMilestoneBanner, setShowMilestoneBanner] = useState(false);
 
   const walletRef = useRef(null);
   const [walletPulse, setWalletPulse] = useState(false);
@@ -179,6 +180,14 @@ export default function DailyQuestion() {
     const newStreak = updatedProfile.playedStreak;
 
     // 🏁 10-day milestone logic (no reset)
+    // 🎯 10-day milestone banner
+    if (newStreak % 10 === 0) {
+      setShowMilestoneBanner(true);
+
+      setTimeout(() => {
+        setShowMilestoneBanner(false);
+      }, 2500);
+    }
     if (newStreak > 0 && newStreak % 10 === 0) {
       // 🎉 Confetti only for 10, 20, 30...
       confetti({
@@ -243,6 +252,35 @@ export default function DailyQuestion() {
             {coinValue}
           </div>
         </div>
+      </div>
+    );
+  };
+
+  const MilestoneBanner = () => {
+    if (!showMilestoneBanner) return null;
+
+    return (
+      <div
+        style={{
+          position: "fixed",
+          top: "12%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          background: "linear-gradient(135deg, #ffcc00, #ff9f00)",
+          color: "#3b2a00",
+          padding: "12px 22px",
+          borderRadius: 16,
+          fontWeight: 800,
+          fontSize: 16,
+          boxShadow: "0 6px 18px rgba(0,0,0,0.25)",
+          zIndex: 10001,
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          animation: "slideDownFade 0.4s ease-out",
+        }}
+      >
+        🔥 <span>10-Day Streak Complete! +50 Coins</span>
       </div>
     );
   };
@@ -412,6 +450,8 @@ export default function DailyQuestion() {
 
       </div>
       <RewardOverlay />
+      <MilestoneBanner />
+
       {flyingCoin && (
         <FlyingCoin
           start={flyingCoin.start}
