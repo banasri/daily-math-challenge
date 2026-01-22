@@ -7,9 +7,11 @@ import { isAccessActive } from "../utils/subscription";
 import confetti from "canvas-confetti";
 import { updatePlayedStreak } from "../services/submissionService";
 import Lottie from "lottie-react";
-import coinRewardAnim from "../lottie/coin_reward.json";
+import goldCoinAnim from "../lottie/coin_gold.json";
+import bronzeCoinAnim from "../lottie/coin_bronze.json";
 import { useRef } from "react";
 import Wallet from "../components/MyWallet";
+import { updateUserStatsAfterPlay } from "../services/userService";
 
 export default function DailyQuestion() {
   const { user, logout } = useAuth();
@@ -24,7 +26,7 @@ export default function DailyQuestion() {
   const [userProfile, setUserProfile] = useState(null);
   const [streak, setStreak] = useState(null);
   const [showRewardAnim, setShowRewardAnim] = useState(false);
-  const [rewardCoins, setRewardCoins] = useState(0);
+
   const walletRef = useRef(null);
   const [walletPulse, setWalletPulse] = useState(false);
   const [flyingCoin, setFlyingCoin] = useState(null);
@@ -115,8 +117,8 @@ export default function DailyQuestion() {
     setSubmitted(true);
 
     // 🎯 Base coins for attempting
-    isCorrect ? setRewardCoins(10) : setRewardCoins(2);
     setShowRewardAnim(true);
+
 
     // 🎯 Bonus coins if correct
     setTimeout(() => {
@@ -160,57 +162,91 @@ export default function DailyQuestion() {
       isCorrect,
       submittedAt: serverTimestamp(),
     });
-    // if (isCorrect) {
-    //   setTimeout(() => confetti({
-    //     particleCount: 120,
-    //     spread: 70,
-    //     origin: { y: 0.6 }
-    //   }), 300);
+    // 5️⃣ Update user stats (coins, score, games)
+    await updateUserStatsAfterPlay({
+      uid: user.uid,
+      isCorrect,
+      coinsEarned: isCorrect ? 10 : 2,
+      scoreEarned: isCorrect ? 5 : 1,
+      todayDate: question.date,
+    });
 
-    // }
-    // // 5️⃣ Start trial on first submission
-    // const userRef = doc(db, "users", user.uid);
-    // const userSnap = await getDoc(userRef);
-
-    // if (!userSnap.data().trialStartedAt) {
-    //   await setDoc(
-    //     userRef,
-    //     {
-    //       trialStartedAt: serverTimestamp(),
-    //       trialExpiresAt: new Date(
-    //         Date.now() + 14 * 24 * 60 * 60 * 1000
-    //       ),
-    //     },
-    //     { merge: true }
-    //   );
-    // }
-    // 2️⃣ Update streak
     await updatePlayedStreak(user.uid);
+    // 🔁 Re-fetch updated user data (streak just changed)
+    const updatedSnap = await getDoc(doc(db, "users", user.uid));
+    const updatedProfile = updatedSnap.data();
 
+    const newStreak = updatedProfile.playedStreak;
 
+    // 🏁 10-day milestone logic (no reset)
+    if (newStreak > 0 && newStreak % 10 === 0) {
+      // 🎉 Confetti only for 10, 20, 30...
+      confetti({
+        particleCount: 200,
+        spread: 90,
+        origin: { y: 0.6 },
+      });
+
+      // 🪙 Bonus coins for milestone
+      await updateUserStatsAfterPlay({
+        uid: user.uid,
+        //isCorrect: true,      // doesn't matter here
+        coinsEarned: 50,      // 🎁 milestone bonus
+        scoreEarned: 0,
+        todayDate: question.date,
+      });
+
+      // (optional UI hook)
+      // setShowMilestoneBanner(true);
+    }
   };
 
   if (loading) return <p>Loading...</p>;
   const RewardOverlay = () => {
     if (!showRewardAnim) return null;
 
+    const coinValue = isCorrect ? 10 : 2;
+    const coinAnim = isCorrect ? goldCoinAnim : bronzeCoinAnim;
+    const coinSize = isCorrect ? 340 : 140;
+
     return (
       <div style={rewardOverlayStyle}>
-        <div style={coinWrapperStyle}>
+        <div
+          style={{
+            position: "relative",
+            width: coinSize,
+            height: coinSize,
+          }}
+        >
           <Lottie
-            animationData={coinRewardAnim}
+            animationData={coinAnim}
             loop={false}
-            style={{ width: 200, height: 200 }}
+            style={{ width: "100%", height: "100%" }}
           />
 
-          {/* 🔢 Coin Text Overlay */}
-          <div style={coinTextStyle}>
-            +{rewardCoins}
+          {/* 🔢 Engraved Number */}
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              fontSize: isCorrect ? 42 : 32,
+              fontWeight: 900,
+              fontFamily: "Cinzel, serif",
+              color: isCorrect ? "#8b6508" : "#7a4b00",
+              textShadow:
+                "1px 1px 0 rgba(255,255,255,0.4), -1px -1px 0 rgba(0,0,0,0.3)",
+              pointerEvents: "none",
+            }}
+          >
+            {coinValue}
           </div>
         </div>
       </div>
     );
   };
+
   const FlyingCoin = ({ start, end, onComplete }) => {
     const [pos, setPos] = useState(start);
 
@@ -236,7 +272,7 @@ export default function DailyQuestion() {
 
     return (
       <Lottie
-        animationData={coinRewardAnim}
+        animationData={isCorrect ? goldCoinAnim : bronzeCoinAnim}
         loop={false}
         style={{
           width: 60,
@@ -248,6 +284,7 @@ export default function DailyQuestion() {
           zIndex: 10000,
         }}
       />
+
     );
   };
 
@@ -263,7 +300,7 @@ export default function DailyQuestion() {
         <div style={{ marginLeft: "auto" }}>
           <Wallet
             ref={walletRef}
-            coins={userProfile?.coins || 0}
+            coins={userProfile?.stats?.currentCoins || 0}
             pulse={walletPulse}
           />
         </div>
@@ -379,9 +416,13 @@ export default function DailyQuestion() {
         <FlyingCoin
           start={flyingCoin.start}
           end={flyingCoin.end}
-          onComplete={() => {
+          onComplete={async () => {
             setFlyingCoin(null);
             setWalletPulse(true);
+
+            const snap = await getDoc(doc(db, "users", user.uid));
+            setUserProfile(snap.data());
+
             setTimeout(() => setWalletPulse(false), 300);
           }}
         />

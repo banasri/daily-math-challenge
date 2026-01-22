@@ -7,8 +7,8 @@
       rgba(204 , 206 , 206, 0.7),
       rgba(58, 125, 138, 0.7),
       rgba(109, 40, 217, 0)
-    ),
-    url('/ramanujan.png') no-repeat center right; /* full-width background image */
+    );
+    /* url('/ramanujan.png') no-repeat center right; full-width background image */
   background-size: contain;       /* makes it span entire width & height */
   color: white;
   margin: 0;
@@ -80,4 +80,22 @@
   .hero-text-container p {
     font-size: 1rem;
   }
+}
+
+.coin-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  font-size: 30px;
+  font-weight: 900;
+  font-family: "Cinzel", "Trajan Pro", serif;
+
+  color: #8b6508; /* gold engraving */
+  text-shadow:
+    1px 1px 0 rgba(255,255,255,0.4),
+   -1px -1px 0 rgba(0,0,0,0.3);
+
+  pointer-events: none;
 }
