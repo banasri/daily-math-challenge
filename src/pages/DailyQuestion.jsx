@@ -9,11 +9,13 @@ import { updatePlayedStreak } from "../services/submissionService";
 import Lottie from "lottie-react";
 import goldCoinAnim from "../lottie/coin_gold.json";
 import bronzeCoinAnim from "../lottie/coin_bronze.json";
-import { useRef } from "react";
+import { useRef, useLayoutEffect } from "react";
 import Wallet from "../components/MyWallet";
 import { updateUserStatsAfterPlay } from "../services/userService";
 import Header from "../components/Header";
+import { useNavigate } from "react-router-dom";
 export default function DailyQuestion() {
+
   const { user, logout } = useAuth();
 
   const [question, setQuestion] = useState(null);
@@ -31,8 +33,13 @@ export default function DailyQuestion() {
   const walletRef = useRef(null);
   const [walletPulse, setWalletPulse] = useState(false);
   const [flyingCoin, setFlyingCoin] = useState(null);
-  // { start: {x,y}, end: {x,y} }
 
+  const navigate = useNavigate();
+  // { start: {x,y}, end: {x,y} }
+  const handleLogout = async () => {
+    await logout(); // Firebase signOut
+    navigate("/login", { replace: true });
+  };
   const rewardOverlayStyle = {
     position: "fixed",
     inset: 0,
@@ -333,6 +340,8 @@ export default function DailyQuestion() {
         streak={streak}
         coins={userProfile?.stats?.currentCoins || 0}
         onProfileClick={() => navigate("/profile")}
+        onLogout={handleLogout}
+        walletRef={walletRef}
       />
       <div style={{ padding: 20, maxWidth: 600, margin: "0 auto" }}>
         {!hasAccess ? (

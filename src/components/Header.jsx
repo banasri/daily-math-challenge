@@ -1,16 +1,26 @@
 import "./Header.css";
+import { useState } from "react";
+import ProfileMenu from "./ProfileMenu";
 
-export default function Header({ streak = 0, coins = 0, onProfileClick }) {
+export default function Header({
+  streak = 0,
+  coins = 0,
+  onProfileClick,
+  onLogout,
+  walletRef
+}) {
+  const [showMenu, setShowMenu] = useState(false);
   return (
     <header
       className="hero-header"
       style={{
-        height: "10vh",
+        // height: "10vh",
         minHeight: "60px",
         display: "flex",
         alignItems: "center",
-        padding: "0 16px",
+        padding: "0 16px 0 16px",
         boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        overflow: "visible",
       }}
     >
       {/* Left: Branding */}
@@ -44,23 +54,37 @@ export default function Header({ streak = 0, coins = 0, onProfileClick }) {
         </div>
 
         {/* 🪙 Coins */}
-        <div style={{ fontWeight: 700 }}>
-          🪙 {coins}
+        <div
+          ref={walletRef} // ✅ attach ref here
+          style={{
+            fontWeight: 700,
+            position: "relative", // needed if you want to do pulse animation later
+          }}
+        >
+          💰 {coins}
         </div>
 
         {/* 👤 Profile */}
-        <button
-          onClick={onProfileClick}
+        <button onClick={() => setShowMenu(v => !v)}
           style={{
-            background: "transparent",
+            width: 36,
+            height: 36,
+            background: "#ffcc00",
+            borderRadius: "50%",
             border: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 18,
             cursor: "pointer",
-            fontSize: 20,
-          }}
-          title="Profile"
-        >
-          👤
-        </button>
+          }}>👤</button>
+        {showMenu && (
+          <ProfileMenu
+            onProfile={onProfileClick}
+            onLogout={onLogout}
+            onClose={() => setShowMenu(false)}
+          />
+        )}
       </div>
     </header>
   );

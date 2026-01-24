@@ -11,7 +11,7 @@ import { db } from "../firebase/firestore";
 
 import Admin from "../pages/Admin";
 import Leaderboard from "../pages/Leaderboard";
-
+import Profile from "../pages/Profile";
 
 /* 🔐 ADD THIS FUNCTION HERE */
 function PrivateRoute({ children }) {
@@ -46,24 +46,24 @@ export default function AppRoutes() {
   const { user } = useAuth();
 
   return (
-      <Routes>
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/leaderboard" element={<Leaderboard />} />
-        <Route
-          path="/"
-          element={user ? <Navigate to="/question" /> : <Login />}
-        />
-
-        <Route
-          path="/question"
-          element={
-            <PrivateRoute>
-              <ProfileGuard>
-                <DailyQuestion />
-              </ProfileGuard>
-            </PrivateRoute>
-          }
-        />
-      </Routes>
+    <Routes>
+      <Route path="/admin" element={<Admin />} />
+      <Route path="/leaderboard" element={<Leaderboard />} />
+      <Route
+        path="/"
+        element={user ? <Navigate to="/question" /> : <Login />}
+      />
+      <Route path="/profile" element={<Profile />} />
+      <Route
+        path="/question"
+        element={
+          <PrivateRoute>
+            <ProfileGuard>
+              <DailyQuestion />
+            </ProfileGuard>
+          </PrivateRoute>
+        }
+      />
+    </Routes>
   );
 }
