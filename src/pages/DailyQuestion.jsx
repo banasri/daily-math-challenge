@@ -81,7 +81,7 @@ export default function DailyQuestion() {
       setUserProfile(profile);
       const hasAccess = isAccessActive(profile);
       setHasAccess(hasAccess);
-      setStreak(profile.playedStreak || 0);
+      setStreak(profile.stats.playedStreak || 0);
       console.log("User profile streak:", streak);
       // 2️⃣ Fetch today’s question
       const q = await getTodayQuestion(grade);
@@ -170,6 +170,12 @@ export default function DailyQuestion() {
       isCorrect,
       submittedAt: serverTimestamp(),
     });
+
+    await updatePlayedStreak(user.uid);
+    // 🔁 Re-fetch updated user data (streak just changed)
+    const updatedSnap = await getDoc(doc(db, "users", user.uid));
+    const updatedProfile = updatedSnap.data();
+
     // 5️⃣ Update user stats (coins, score, games)
     await updateUserStatsAfterPlay({
       uid: user.uid,
@@ -179,13 +185,9 @@ export default function DailyQuestion() {
       todayDate: question.date,
     });
 
-    await updatePlayedStreak(user.uid);
-    // 🔁 Re-fetch updated user data (streak just changed)
-    const updatedSnap = await getDoc(doc(db, "users", user.uid));
-    const updatedProfile = updatedSnap.data();
-
-    const newStreak = updatedProfile.playedStreak;
-
+    const newStreak = updatedProfile.stats.playedStreak;
+    console.log("Updated streak:", newStreak);
+    setStreak(prev => prev + 1);
     // 🏁 10-day milestone logic (no reset)
     // 🎯 10-day milestone banner
     if (newStreak % 10 === 0) {
