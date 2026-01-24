@@ -14,6 +14,7 @@ import Wallet from "../components/MyWallet";
 import { updateUserStatsAfterPlay } from "../services/userService";
 import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
+import MilestoneBanner from "../components/MilestoneBanner";
 export default function DailyQuestion() {
 
   const { user, logout } = useAuth();
@@ -33,6 +34,7 @@ export default function DailyQuestion() {
   const walletRef = useRef(null);
   const [walletPulse, setWalletPulse] = useState(false);
   const [flyingCoin, setFlyingCoin] = useState(null);
+  const milestoneShownRef = useRef(false);
 
   const navigate = useNavigate();
   // { start: {x,y}, end: {x,y} }
@@ -108,7 +110,7 @@ export default function DailyQuestion() {
     }
 
     load();
-  }, [user, submitted]);
+  }, [user]);
 
   const submitAnswer = async () => {
     if (selected === null || submitted) return;
@@ -190,32 +192,38 @@ export default function DailyQuestion() {
     setStreak(prev => prev + 1);
     // 🏁 10-day milestone logic (no reset)
     // 🎯 10-day milestone banner
-    if (newStreak % 10 === 0) {
+
+    if (
+      newStreak > 0 &&
+      newStreak % 10 === 0 &&
+      !milestoneShownRef.current
+    ) {
+      milestoneShownRef.current = true;
+
       setShowMilestoneBanner(true);
 
+      // Confetti AFTER banner appears
+      setTimeout(() => {
+        confetti({
+          particleCount: 200,
+          spread: 90,
+          origin: { y: 0.6 },
+        });
+      }, 400);
+
+      // Hide banner
       setTimeout(() => {
         setShowMilestoneBanner(false);
       }, 2500);
-    }
-    if (newStreak > 0 && newStreak % 10 === 0) {
-      // 🎉 Confetti only for 10, 20, 30...
-      confetti({
-        particleCount: 200,
-        spread: 90,
-        origin: { y: 0.6 },
-      });
 
-      // 🪙 Bonus coins for milestone
-      await updateUserStatsAfterPlay({
+      // Milestone coins (fire-and-forget)
+      updateUserStatsAfterPlay({
         uid: user.uid,
-        isCorrect: isCorrect,      // doesn't matter here
-        coinsEarned: 50,      // 🎁 milestone bonus
+        isCorrect,
+        coinsEarned: 50,
         scoreEarned: isCorrect ? 5 : 1,
         todayDate: question.date,
       });
-
-      // (optional UI hook)
-      // setShowMilestoneBanner(true);
     }
   };
 
@@ -265,34 +273,6 @@ export default function DailyQuestion() {
     );
   };
 
-  const MilestoneBanner = () => {
-    if (!showMilestoneBanner) return null;
-
-    return (
-      <div
-        style={{
-          position: "fixed",
-          top: "12%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          background: "linear-gradient(135deg, #ffcc00, #ff9f00)",
-          color: "#3b2a00",
-          padding: "12px 22px",
-          borderRadius: 16,
-          fontWeight: 800,
-          fontSize: 16,
-          boxShadow: "0 6px 18px rgba(0,0,0,0.25)",
-          zIndex: 10001,
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          animation: "slideDownFade 0.4s ease-out",
-        }}
-      >
-        🔥 <span>10-Day Streak Complete! +50 Coins</span>
-      </div>
-    );
-  };
 
   const FlyingCoin = ({ start, end, onComplete }) => {
     const [pos, setPos] = useState(start);
@@ -452,7 +432,8 @@ export default function DailyQuestion() {
 
       </div>
       <RewardOverlay />
-      <MilestoneBanner />
+
+      <MilestoneBanner visible={showMilestoneBanner} />
 
       {flyingCoin && (
         <FlyingCoin
