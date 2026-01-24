@@ -12,7 +12,7 @@ import bronzeCoinAnim from "../lottie/coin_bronze.json";
 import { useRef } from "react";
 import Wallet from "../components/MyWallet";
 import { updateUserStatsAfterPlay } from "../services/userService";
-
+import Header from "../components/Header";
 export default function DailyQuestion() {
   const { user, logout } = useAuth();
 
@@ -199,9 +199,9 @@ export default function DailyQuestion() {
       // 🪙 Bonus coins for milestone
       await updateUserStatsAfterPlay({
         uid: user.uid,
-        //isCorrect: true,      // doesn't matter here
+        isCorrect: isCorrect,      // doesn't matter here
         coinsEarned: 50,      // 🎁 milestone bonus
-        scoreEarned: 0,
+        scoreEarned: isCorrect ? 5 : 1,
         todayDate: question.date,
       });
 
@@ -329,20 +329,11 @@ export default function DailyQuestion() {
 
   return (
     <> {/* Header */}
-      <div style={{ display: "flex" }}>
-        <span>
-          Welcome, <strong id="username">{user.displayName}</strong>
-          &nbsp;|&nbsp;
-          <a href="#" style={{ color: "#c4c5e2" }} onClick={logout}>Logout</a>
-        </span>
-        <div style={{ marginLeft: "auto" }}>
-          <Wallet
-            ref={walletRef}
-            coins={userProfile?.stats?.currentCoins || 0}
-            pulse={walletPulse}
-          />
-        </div>
-      </div>
+      <Header
+        streak={streak}
+        coins={userProfile?.stats?.currentCoins || 0}
+        onProfileClick={() => navigate("/profile")}
+      />
       <div style={{ padding: 20, maxWidth: 600, margin: "0 auto" }}>
         {!hasAccess ? (
           <div style={{ padding: 20 }}>
