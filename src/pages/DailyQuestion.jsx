@@ -183,13 +183,13 @@ export default function DailyQuestion() {
       uid: user.uid,
       isCorrect,
       coinsEarned: isCorrect ? 10 : 2,
-      scoreEarned: isCorrect ? 5 : 1,
+      scoreEarned: isCorrect ? 1 : 0,
       todayDate: question.date,
     });
 
     const newStreak = updatedProfile.stats.playedStreak;
     console.log("Updated streak:", newStreak);
-    setStreak(prev => prev + 1);
+    setStreak(newStreak);
     // 🏁 10-day milestone logic (no reset)
     // 🎯 10-day milestone banner
 
@@ -221,7 +221,7 @@ export default function DailyQuestion() {
         uid: user.uid,
         isCorrect,
         coinsEarned: 50,
-        scoreEarned: isCorrect ? 5 : 1,
+        scoreEarned: isCorrect ? 1 : 0,
         todayDate: question.date,
       });
     }

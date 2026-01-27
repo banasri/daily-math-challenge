@@ -2,12 +2,7 @@
   /* width: 100%; */
   min-height: 150px;           /* adjust height as needed */
   padding: 40px 20px;
-  background: linear-gradient(
-      34deg,
-      rgba(204 , 206 , 206, 0.7),
-      rgba(58, 125, 138, 0.7),
-      rgba(109, 40, 217, 0)
-    );
+  background: rgb(0, 208, 255);
     /* url('/ramanujan.png') no-repeat center right; full-width background image */
   background-size: contain;       /* makes it span entire width & height */
   color: white;
