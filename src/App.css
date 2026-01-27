@@ -44,3 +44,46 @@
 h3, h4 {
   margin: 0;  
 }
+
+/* ---------- Shared button base ---------- */
+.btn {
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+}
+
+/* ---------- Primary: Sign in ---------- */
+.btn-primary {
+  background-color: #ff9400;
+  color: #1b1b1b;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.btn-primary:hover {
+  background-color: #ffae33;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+  transform: translateY(-2px);
+}
+
+/* ---------- Secondary: Leaderboard ---------- */
+.btn-secondary {
+  background: transparent;
+  border: 2px solid #ff9400;
+  color: #1b1b1b;
+}
+
+.btn-secondary:hover {
+  background-color: #ff9400;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+/* ---------- Optional: focus (keyboard users) ---------- */
+.btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(255, 148, 0, 0.5);
+}

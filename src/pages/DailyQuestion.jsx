@@ -168,6 +168,7 @@ export default function DailyQuestion() {
       questionId: question.id,
       date: question.date,
       grade: question.grade,
+      school: userProfile.school || null,
       selectedOption: selected,
       isCorrect,
       submittedAt: serverTimestamp(),
@@ -319,10 +320,12 @@ export default function DailyQuestion() {
   return (
     <> {/* Header */}
       <Header
+        user={user}
         streak={streak}
         coins={userProfile?.stats?.currentCoins || 0}
         onProfileClick={() => navigate("/profile")}
         onLogout={handleLogout}
+        onLeaderboardClick={() => navigate("/leaderboard")}
         walletRef={walletRef}
       />
       <div style={{ padding: 20, maxWidth: 600, margin: "0 auto" }}>
