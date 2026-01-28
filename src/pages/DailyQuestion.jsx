@@ -15,6 +15,7 @@ import { updateUserStatsAfterPlay } from "../services/userService";
 import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import MilestoneBanner from "../components/MilestoneBanner";
+import { getTodayIST, getYesterdayIST } from "../utils/date";
 export default function DailyQuestion() {
 
   const { user, logout } = useAuth();
@@ -83,7 +84,14 @@ export default function DailyQuestion() {
       setUserProfile(profile);
       const hasAccess = isAccessActive(profile);
       setHasAccess(hasAccess);
-      setStreak(profile.stats.playedStreak || 0);
+
+      const yesterday = getYesterdayIST();
+      const lastPlayedDate = profile?.stats?.lastPlayedDate;
+      const dbStreak = profile?.stats?.playedStreak || 0;
+      const today = getTodayIST();
+      const displayStreak =
+        lastPlayedDate === yesterday || lastPlayedDate === today ? dbStreak : 0;
+      setStreak(displayStreak);
       console.log("User profile streak:", streak);
       // 2️⃣ Fetch today’s question
       const q = await getTodayQuestion(grade);
@@ -323,6 +331,7 @@ export default function DailyQuestion() {
         user={user}
         streak={streak}
         coins={userProfile?.stats?.currentCoins || 0}
+        onStreakClick={() => navigate("/streaks")}
         onProfileClick={() => navigate("/profile")}
         onLogout={handleLogout}
         onLeaderboardClick={() => navigate("/leaderboard")}

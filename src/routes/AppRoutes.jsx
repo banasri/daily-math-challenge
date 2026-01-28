@@ -1,25 +1,24 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 
 import Login from "../pages/Login";
 import DailyQuestion from "../pages/DailyQuestion";
-import Onboarding from "../pages/Onboarding";
-
+import Profile from "../pages/Profile";
+import Admin from "../pages/Admin";
+import Leaderboard from "../pages/Leaderboard";
+import StreaksAndStats from "../pages/StreaksAndStats";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase/firestore";
 
-import Admin from "../pages/Admin";
-import Leaderboard from "../pages/Leaderboard";
-import Profile from "../pages/Profile";
-
-/* 🔐 ADD THIS FUNCTION HERE */
+/* 🔐 Auth guard */
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return null;
   return user ? children : <Navigate to="/" />;
 }
-/* 📝 ADD THIS FUNCTION HERE */
+
+/* 🧠 Profile completeness guard */
 function ProfileGuard({ children }) {
   const { user } = useAuth();
   const [ready, setReady] = useState(false);
@@ -33,15 +32,17 @@ function ProfileGuard({ children }) {
       setHasProfile(!!snap.data()?.fullName);
       setReady(true);
     }
+
     checkProfile();
   }, [user]);
 
   if (!ready) return null;
 
-  return hasProfile ? children : <Onboarding />;
+  // 🚨 Redirect to Profile instead of Onboarding
+  return hasProfile ? children : <Navigate to="/profile" />;
 }
 
-/* 👇 AppRoutes stays BELOW */
+/* 👇 Routes */
 export default function AppRoutes() {
   const { user } = useAuth();
 
@@ -49,11 +50,21 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/admin" element={<Admin />} />
       <Route path="/leaderboard" element={<Leaderboard />} />
+
       <Route
         path="/"
         element={user ? <Navigate to="/question" /> : <Login />}
       />
-      <Route path="/profile" element={<Profile />} />
+      <Route path="/streaks" element={<StreaksAndStats />} />
+      <Route
+        path="/profile"
+        element={
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        }
+      />
+
       <Route
         path="/question"
         element={

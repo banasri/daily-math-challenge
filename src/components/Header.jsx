@@ -7,6 +7,7 @@ export default function Header({
   user,
   streak = 0,
   coins = 0,
+  onStreakClick,
   onProfileClick,
   onLogout,
   onLeaderboardClick,
@@ -64,7 +65,7 @@ export default function Header({
         {user && (
           <>
             {/* 🔥 Streak */}
-            <div style={{ fontWeight: 700 }}>
+            <div onClick={onStreakClick} style={{ cursor: "pointer", fontWeight: 700 }}>
               🔥 {streak} {streak === 1 ? "day" : "days"}
             </div>
 

@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
 import { db } from "../firebase/firestore";
 
 /**
@@ -10,7 +10,8 @@ export async function getTodayLeaderboard() {
   const q = query(
     collection(db, "submissions"),
     where("date", "==", today),
-    where("isCorrect", "==", true)
+    where("isCorrect", "==", true),
+    orderBy("submittedAt", "asc")
   );
 
   const snap = await getDocs(q);
