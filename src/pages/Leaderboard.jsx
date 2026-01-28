@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { getTodayLeaderboard } from "../services/leaderboardService";
-import Header from "../components/Header";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firestore";
+import AppHeader from "../components/AppHeader";
 
 export default function Leaderboard() {
   const [loading, setLoading] = useState(true);
@@ -56,14 +56,7 @@ export default function Leaderboard() {
   return (
     <>
       {/* 🔝 Shared Header */}
-      <Header
-        user={user}
-        streak={streak}
-        coins={coins}
-        onProfileClick={() => navigate("/profile")}
-        onLogout={logout}
-        onLeaderboardClick={() => navigate("/leaderboard")}
-      />
+      <AppHeader />
       <div
         onClick={() => navigate("/")}
         style={{

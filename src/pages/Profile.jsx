@@ -3,6 +3,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import AppHeader from "../components/AppHeader";
 
 export default function Profile() {
   const { user, logout } = useAuth();
@@ -54,61 +55,64 @@ export default function Profile() {
   if (loading) return <p>Loading profile...</p>;
 
   return (
-    <div style={{ maxWidth: 520, margin: "40px auto", padding: 20 }}>
-      <h2>👤 Profile</h2>
+    <>
+      <AppHeader showLeaderboard={false} showStreaks={false} />
+      <div style={{ maxWidth: 520, margin: "40px auto", padding: 20 }}>
+        <h2>👤 Profile</h2>
 
-      <div style={{ marginTop: 20 }}>
-        <label>Full Name</label>
-        <input
-          name="fullName"
-          value={form.fullName}
-          onChange={handleChange}
-          style={inputStyle}
-        />
+        <div style={{ marginTop: 20 }}>
+          <label>Full Name</label>
+          <input
+            name="fullName"
+            value={form.fullName}
+            onChange={handleChange}
+            style={inputStyle}
+          />
 
-        <label>Class</label>
-        <input
-          name="grade"
-          value={form.grade}
-          onChange={handleChange}
-          style={inputStyle}
-        />
+          <label>Class</label>
+          <input
+            name="grade"
+            value={form.grade}
+            onChange={handleChange}
+            style={inputStyle}
+          />
 
-        <label>School</label>
-        <input
-          name="school"
-          value={form.school}
-          onChange={handleChange}
-          style={inputStyle}
-        />
+          <label>School</label>
+          <input
+            name="school"
+            value={form.school}
+            onChange={handleChange}
+            style={inputStyle}
+          />
 
-        <label>Date of Birth</label>
-        <input
-          type="date"
-          name="dob"
-          value={form.dob}
-          onChange={handleChange}
-          style={inputStyle}
-        />
+          <label>Date of Birth</label>
+          <input
+            type="date"
+            name="dob"
+            value={form.dob}
+            onChange={handleChange}
+            style={inputStyle}
+          />
 
-        <button
-          onClick={saveProfile}
-          disabled={saving}
-          style={{ marginTop: 20 }}
-        >
-          {saving ? "Saving..." : "Update Profile"}
-        </button>
+          <button
+            onClick={saveProfile}
+            disabled={saving}
+            style={{ marginTop: 20 }}
+          >
+            {saving ? "Saving..." : "Update Profile"}
+          </button>
 
-        <hr style={{ margin: "30px 0" }} />
+          <hr style={{ margin: "30px 0" }} />
 
-        <button
-          onClick={logout}
-          style={{ background: "#ff4d4f", color: "white" }}
-        >
-          Logout
-        </button>
+          <button
+            onClick={logout}
+            style={{ background: "#ff4d4f", color: "white" }}
+          >
+            Logout
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

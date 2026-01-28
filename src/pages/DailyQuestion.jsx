@@ -12,10 +12,11 @@ import bronzeCoinAnim from "../lottie/coin_bronze.json";
 import { useRef, useLayoutEffect } from "react";
 import Wallet from "../components/MyWallet";
 import { updateUserStatsAfterPlay } from "../services/userService";
-import Header from "../components/Header";
+import AppHeader from "../components/AppHeader";
 import { useNavigate } from "react-router-dom";
 import MilestoneBanner from "../components/MilestoneBanner";
 import { getTodayIST, getYesterdayIST } from "../utils/date";
+
 export default function DailyQuestion() {
 
   const { user, logout } = useAuth();
@@ -36,6 +37,8 @@ export default function DailyQuestion() {
   const [walletPulse, setWalletPulse] = useState(false);
   const [flyingCoin, setFlyingCoin] = useState(null);
   const milestoneShownRef = useRef(false);
+  const [headerRefreshKey, setHeaderRefreshKey] = useState(0);
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
   // { start: {x,y}, end: {x,y} }
@@ -121,7 +124,13 @@ export default function DailyQuestion() {
   }, [user]);
 
   const submitAnswer = async () => {
-    if (selected === null || submitted) return;
+    console.log("Submitting answer:", selected, submitted);
+    if (submitted) return;
+
+    if (selected === null) {
+      setError("⚠️ Please select an option before submitting.");
+      return;
+    }
     if (!hasAccess) return;
 
     const submissionId = `${user.uid}_${question.date}`;
@@ -327,16 +336,7 @@ export default function DailyQuestion() {
 
   return (
     <> {/* Header */}
-      <Header
-        user={user}
-        streak={streak}
-        coins={userProfile?.stats?.currentCoins || 0}
-        onStreakClick={() => navigate("/streaks")}
-        onProfileClick={() => navigate("/profile")}
-        onLogout={handleLogout}
-        onLeaderboardClick={() => navigate("/leaderboard")}
-        walletRef={walletRef}
-      />
+      <AppHeader walletRef={walletRef} refreshKey={headerRefreshKey} />
       <div style={{ padding: 20, maxWidth: 600, margin: "0 auto" }}>
         {!hasAccess ? (
           <div style={{ padding: 20 }}>
@@ -375,7 +375,10 @@ export default function DailyQuestion() {
                   <li key={idx} style={{ marginBottom: 8 }}>
                     <button
                       disabled={submitted}
-                      onClick={() => setSelected(idx)}
+                      onClick={() => {
+                        setSelected(idx);
+                        setError("");
+                      }}
                       style={{
                         width: "100%",
                         padding: 10,
@@ -414,10 +417,15 @@ export default function DailyQuestion() {
               )}
 
               {/* Submit */}
+              {error && (
+                <p style={{ color: "brown", marginTop: 8, fontSize: 16 }}>
+                  {error}
+                </p>
+              )}
               {!submitted && (
                 <button
                   onClick={submitAnswer}
-                  disabled={selected === null}
+                  // disabled={selected === null}
                   style={{ marginTop: 10 }}
                 >
                   Submit Answer
@@ -457,7 +465,7 @@ export default function DailyQuestion() {
 
             const snap = await getDoc(doc(db, "users", user.uid));
             setUserProfile(snap.data());
-
+            setHeaderRefreshKey((k) => k + 1);
             setTimeout(() => setWalletPulse(false), 300);
           }}
         />

@@ -1,4 +1,4 @@
-
+import AppHeader from "../components/AppHeader";
 export default function StreaksAndStats() {
   const currentStreak = 17;
   const gamesPlayed = 42;
@@ -14,35 +14,38 @@ export default function StreaksAndStats() {
   const nextMilestone = milestones.find(m => currentStreak < m.days);
 
   return (
-    <div style={{ padding: 20, maxWidth: 600, margin: "0 auto" }}>
-      {/* 🔥 Streak Hero */}
-      <div style={cardStyle}>
-        <h1 style={{ fontSize: 28, marginBottom: 8 }}>
-          🔥 {currentStreak} Day Streak
-        </h1>
-        <p>You’re building a great habit 👏</p>
+    <>
+      <AppHeader />
+      <div style={{ padding: 20, maxWidth: 600, margin: "0 auto" }}>
+        {/* 🔥 Streak Hero */}
+        <div style={cardStyle}>
+          <h1 style={{ fontSize: 28, marginBottom: 8 }}>
+            🔥 {currentStreak} Day Streak
+          </h1>
+          <p>You’re building a great habit 👏</p>
+        </div>
+
+
+        {/* 🏆 Streak Levels */}
+        <div style={cardStyle}>
+          <h3>Streak Levels</h3>
+          <p>10 days — Good 👍</p>
+          <p>20 days — Great 🚀</p>
+          <p>30 days — Incredible 💎</p>
+          <p>50 days — Unstoppable 🏆</p>
+        </div>
+
+
+        {/* 📊 Stats */}
+        <div style={cardStyle}>
+          <h3>Your journey so far</h3>
+          <p>🎮 Games Played: <b>{gamesPlayed}</b></p>
+          <p>✅ Correct Answers: <b>{correctAnswers}</b></p>
+        </div>
+
+
       </div>
-
-
-      {/* 🏆 Streak Levels */}
-      <div style={cardStyle}>
-        <h3>Streak Levels</h3>
-        <p>10 days — Good 👍</p>
-        <p>20 days — Great 🚀</p>
-        <p>30 days — Incredible 💎</p>
-        <p>50 days — Unstoppable 🏆</p>
-      </div>
-
-
-      {/* 📊 Stats */}
-      <div style={cardStyle}>
-        <h3>Your journey so far</h3>
-        <p>🎮 Games Played: <b>{gamesPlayed}</b></p>
-        <p>✅ Correct Answers: <b>{correctAnswers}</b></p>
-      </div>
-
-
-    </div>
+    </>
   );
 }
 

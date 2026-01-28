@@ -1,9 +1,20 @@
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function Login() {
-  const { login } = useAuth();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) navigate("/question", { replace: true });
+  }, [user]);
+
+  const handleLogin = async () => {
+    await login();
+    // No need to navigate here, the useEffect will catch the user change
+  };
 
   return (
     <div
@@ -69,10 +80,10 @@ export default function Login() {
         }}
       >
         {/* Sign in */}
-        <button className="btn btn-primary" onClick={login}>
+        <button className="btn btn-primary" onClick={handleLogin}>
           Sign in with Google
         </button>
-        
+
         {/* Leaderboard */}
         <button
           className="btn btn-secondary"
