@@ -8,6 +8,7 @@ export default function Header({
   streak = 0,
   coins = 0,
   onStreakClick,
+  onRewardsClick,
   onProfileClick,
   onLogout,
   onLeaderboardClick,
@@ -71,8 +72,10 @@ export default function Header({
 
             {/* 🪙 Coins */}
             <div
+              onClick={onRewardsClick}
               ref={walletRef} // ✅ attach ref here
               style={{
+                cursor: "pointer",
                 fontWeight: 700,
                 position: "relative", // needed if you want to do pulse animation later
               }}

@@ -8,6 +8,7 @@ import Profile from "../pages/Profile";
 import Admin from "../pages/Admin";
 import Leaderboard from "../pages/Leaderboard";
 import StreaksAndStats from "../pages/StreaksAndStats";
+import Rewards from "../pages/Rewards";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase/firestore";
 
@@ -38,7 +39,7 @@ function ProfileGuard({ children }) {
 
   if (!ready) return null;
 
-  // 🚨 Redirect to Profile instead of Onboarding
+  // 🚨 Redirect to Profile instead of Profile
   return hasProfile ? children : <Navigate to="/profile" />;
 }
 
@@ -57,6 +58,7 @@ export default function AppRoutes() {
         element={user ? <Navigate to="/question" /> : <Login />}
       />
       <Route path="/streaks" element={<StreaksAndStats />} />
+      <Route path="/rewards" element={<Rewards />} />
       <Route
         path="/profile"
         element={

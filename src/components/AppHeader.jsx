@@ -48,6 +48,7 @@ export default function AppHeader({
       onStreakClick={
         showStreaks ? () => navigate("/streaks") : undefined
       }
+      onRewardsClick={() => navigate("/rewards")}
       onLeaderboardClick={
         showLeaderboard ? () => navigate("/leaderboard") : undefined
       }

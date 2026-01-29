@@ -56,7 +56,7 @@ export default function Profile() {
 
   return (
     <>
-      <AppHeader showLeaderboard={false} showStreaks={false} />
+      <AppHeader showLeaderboard={true} showStreaks={true} />
       <div style={{ maxWidth: 520, margin: "40px auto", padding: 20 }}>
         <h2>👤 Profile</h2>
 
@@ -67,22 +67,31 @@ export default function Profile() {
             value={form.fullName}
             onChange={handleChange}
             style={inputStyle}
+            placeholder="Full Name"
           />
 
           <label>Class</label>
-          <input
+          <select
             name="grade"
             value={form.grade}
             onChange={handleChange}
             style={inputStyle}
-          />
+          >
+            <option value="">Select class</option>
+            <option value="5">Grade 5</option>
+            <option value="6">Grade 6</option>
+            <option value="7">Grade 7</option>
+            <option value="8">Grade 8</option>
+            <option value="9">Grade 9</option>
+          </select>
 
-          <label>School</label>
+          <label>School and City</label>
           <input
             name="school"
             value={form.school}
             onChange={handleChange}
             style={inputStyle}
+            placeholder="Your school name, City Name"
           />
 
           <label>Date of Birth</label>

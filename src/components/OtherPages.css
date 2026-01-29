@@ -1,0 +1,56 @@
+/* Rewards inside stat-box cards */
+
+.reward-box {
+  text-align: center;
+  gap: 8px;
+}
+
+.reward-box.locked {
+  opacity: 0.85;
+}
+
+.reward-image {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.reward-image img {
+  height: 60px;
+}
+
+.reward-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.reward-coins {
+  font-size: 13px;
+  color: var(--muted-text);
+}
+
+.reward-progress {
+  font-size: 12px;
+  color: var(--muted-text);
+}
+
+.reward-btn {
+  margin-top: 6px;
+  border: none;
+  border-radius: 8px;
+  padding: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.reward-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+.reward-btn.disabled {
+  background: var(--muted-bg);
+  color: var(--muted-text);
+}
