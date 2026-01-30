@@ -1,56 +1,77 @@
-/* Rewards inside stat-box cards */
-
-.reward-box {
-  text-align: center;
-  gap: 8px;
+.rewards-page {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.reward-box.locked {
-  opacity: 0.85;
+.page-title {
+  font-size: 24px;
+  margin-bottom: 12px;
 }
 
-.reward-image {
-  height: 80px;
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Stats */
+.stats-card {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 6px;
+  justify-content: space-between;
+  text-align: center;
 }
 
-.reward-image img {
-  height: 60px;
+.stat .label {
+  font-size: 16px;
+  color: #666;
+}
+
+.stat .value {
+  font-size: 18px;
+  font-weight: 600;
+  color: black;
+}
+
+/* Rewards */
+.section-title {
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.reward-item {
+  border: 1px solid #2f2c2c;
+  border-radius: 10px;
+  padding: 8px;
+  text-align: center;
+}
+
+.reward-item img {
+  width: 100%;
+  max-height: 90px;
+  object-fit: contain;
 }
 
 .reward-name {
   font-size: 14px;
-  font-weight: 600;
+  margin-top: 6px;
 }
 
 .reward-coins {
-  font-size: 13px;
-  color: var(--muted-text);
+  font-size: 14px;
+  color: #555;
 }
 
-.reward-progress {
-  font-size: 12px;
-  color: var(--muted-text);
-}
-
-.reward-btn {
-  margin-top: 6px;
-  border: none;
-  border-radius: 8px;
-  padding: 6px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.reward-btn.active {
-  background: var(--primary);
-  color: white;
-}
-
-.reward-btn.disabled {
-  background: var(--muted-bg);
-  color: var(--muted-text);
+.coming-soon {
+  text-align: center;
+  font-size: 16px;
+  color: #fefcfc;
 }
