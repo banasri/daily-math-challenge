@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firestore";
 import AppHeader from "../components/AppHeader";
-
+import "../components/OtherPages.css";
 export default function Leaderboard() {
   const [loading, setLoading] = useState(true);
   const [entries, setEntries] = useState([]);
@@ -57,7 +57,7 @@ export default function Leaderboard() {
     <>
       {/* 🔝 Shared Header */}
       <AppHeader />
-      <div
+      {/* <div
         onClick={() => navigate("/")}
         style={{
           cursor: "pointer",
@@ -67,9 +67,9 @@ export default function Leaderboard() {
         }}
       >
         ← Back to Today’s Question
-      </div>
-      <div style={{ maxWidth: 600, padding: 20, margin: "0 auto" }}>
-        <h2>🏆 Today’s Hall of Fame</h2>
+      </div> */}
+      <h2 style={{ marginTop: 20, textAlign: "center" }}>🏆 Today’s Hall of Fame</h2>
+      <div className="leaderboard-page">
 
         {entries.length === 0 ? (
           <p>
@@ -81,13 +81,13 @@ export default function Leaderboard() {
             {entries.map((e, idx) => (
               <li key={idx} style={{ marginBottom: 10 }}>
                 <span style={{ fontWeight: 700 }}>{e.fullName}</span>
-                {e.grade && <span style={{ color: "#d6e2db" }}> • Grade {e.grade}</span>}
-                {e.school && <span style={{ color: "#d6e2db" }}> • {e.school}</span>}
+                {e.grade && <span style={{ color: "#97096a" }}> • Grade {e.grade}</span>}
+                {e.school && <span style={{ color: "#2116a2" }}> • {e.school}</span>}
               </li>
             ))}
           </ol>
         )}
-      </div>
+      </div >
     </>
   );
 }

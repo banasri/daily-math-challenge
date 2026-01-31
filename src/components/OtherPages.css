@@ -1,5 +1,4 @@
 .rewards-page {
-  padding: 24px;
   max-width: 800px;
   margin: 0 auto;
 }
@@ -12,7 +11,7 @@
 .card {
   background: #fff;
   border-radius: 12px;
-  padding: 12px;
+  padding: 6px;
   margin-bottom: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
@@ -39,6 +38,7 @@
 .section-title {
   margin-bottom: 12px;
   font-size: 16px;
+  color: rgb(67, 66, 66);
 }
 
 .rewards-grid {
@@ -56,7 +56,7 @@
 
 .reward-item img {
   width: 100%;
-  max-height: 90px;
+  max-height: 70px;
   object-fit: contain;
 }
 
@@ -74,4 +74,28 @@
   text-align: center;
   font-size: 16px;
   color: #fefcfc;
+}
+
+.question-page {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  color :#2f2c2c
+}
+.leaderboard-page {
+  max-width: 800px;
+  min-height: 1000px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  color :#2f2c2c
 }

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase/firestore";
 import Header from "./Header";
+import { getTodayIST, getYesterdayIST } from "../utils/date";
 
 export default function AppHeader({
   walletRef = null,
@@ -26,7 +27,14 @@ export default function AppHeader({
       if (!snap.exists()) return;
 
       const profile = snap.data();
-      setStreak(profile.stats?.playedStreak || 0);
+      const yesterday = getYesterdayIST();
+      const lastPlayedDate = profile?.stats?.lastPlayedDate;
+      const dbStreak = profile?.stats?.playedStreak || 0;
+      const today = getTodayIST();
+      const displayStreak =
+        lastPlayedDate === yesterday || lastPlayedDate === today ? dbStreak : 0;
+      setStreak(displayStreak);
+      //setStreak(profile.stats?.playedStreak || 0);
       setCoins(profile.stats?.currentCoins || 0);
     }
 

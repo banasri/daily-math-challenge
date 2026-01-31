@@ -43,10 +43,9 @@ export default function Rewards() {
   return (
     <>
       <AppHeader user={user} streak={streak} coins={0} onLogout={logout} />
-
+      <h2 style={{ marginTop: 20, marginBottom: 0, textAlign: "center" }}>Rewards</h2>
+      <h4 style={{ marginTop: 10, marginBottom: 5, textAlign: "center" }}>🎁 Redeem rewards using your available coins</h4>
       <div className="rewards-page">
-        <h2 className="page-title">Rewards </h2>
-        <h4>🎁 Redeem rewards using your available coins</h4>
         {/* Coins summary */}
         <div className="card stats-card">
           <div className="stat">
@@ -54,15 +53,15 @@ export default function Rewards() {
             <span className="value"> : {currentCoins}</span>
           </div>
 
-          <div className="stat">
+          {/* <div className="stat">
             <span className="label">Lifetime Coins</span>
             <span className="value"> : {totalCoinsEarned}</span>
-          </div>
+          </div> */}
         </div>
 
         {/* Rewards */}
         <div className="card rewards-card">
-          <h3 className="section-title">Unlock with Coins</h3>
+          <h3 className="section-title">Unlock with Coins (Sample items and More...)</h3>
 
           <div className="rewards-grid">
             <RewardItem img={tshirt} name="T-Shirt" coins="640" />

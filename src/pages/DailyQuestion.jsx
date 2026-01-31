@@ -16,7 +16,7 @@ import AppHeader from "../components/AppHeader";
 import { useNavigate } from "react-router-dom";
 import MilestoneBanner from "../components/MilestoneBanner";
 import { getTodayIST, getYesterdayIST } from "../utils/date";
-
+import "../components/OtherPages.css";
 export default function DailyQuestion() {
 
   const { user, logout } = useAuth();
@@ -110,6 +110,16 @@ export default function DailyQuestion() {
         if (subSnap.exists()) {
           const data = subSnap.data();
           console.log("Previous submission data:", data);
+          if (data.grade !== grade) {
+            setQuestion(null); // prevent showing question
+            setSubmitted(true);
+            setIsCorrect(null);
+            setSelected(null);
+            setSelectedOption(null);
+            setLoading(false);
+            return;
+          }
+
           setSubmitted(true);
           setIsCorrect(data.isCorrect);          // ✅ restore correctness
           setSelectedOption(data.selectedOption); // ✅ restore selection
@@ -337,7 +347,8 @@ export default function DailyQuestion() {
   return (
     <> {/* Header */}
       <AppHeader walletRef={walletRef} refreshKey={headerRefreshKey} />
-      <div style={{ padding: 20, maxWidth: 600, margin: "0 auto" }}>
+      <h2 style={{ marginTop: 20, textAlign: "center" }}>Today's Question</h2>
+      <div className="question-page">
         {!hasAccess ? (
           <div style={{ padding: 20 }}>
             <h3>🔒 Trial Ended</h3>
@@ -347,8 +358,14 @@ export default function DailyQuestion() {
             </p>
           </div>
         ) : !question ? (
-          <p>No question available for today. Come back tomorrow!</p>
-        ) :
+          <div style={{ padding: 20 }}>
+            <h3>🎯 Daily Challenge Completed</h3>
+            <p>
+              You’ve already played today’s challenge for a different grade.
+              Come back tomorrow to play again!
+            </p>
+          </div>
+        )  :
           (
             <>
               {/* existing question + MCQ + submit + solution */}
@@ -387,15 +404,15 @@ export default function DailyQuestion() {
                         border:
                           selected === idx
                             ? "2px solid #333"
-                            : "1px solid #ccc",
+                            : "2px solid #ccc",
                         backgroundColor:
                           submitted && idx === question.correctOption
                             ? "#17b60bff" // green for correct
                             : submitted && idx === selected
                               ? "#f56767ff" // red for wrong selected
                               : selected === idx
-                                ? "#e0e0e0" // selected but not submitted
-                                : "#fff",
+                                ? "#e0e0e079" // selected but not submitted
+                                : "#ffffffc4",
                       }}
                     >
                       {opt}
@@ -406,9 +423,9 @@ export default function DailyQuestion() {
               {submitted && (
                 <div style={{ marginTop: 10 }}>
                   {isCorrect ? (
-                    <p style={{ color: "#ceffff" }}>🎉 Congratulations! Your name appears in today’s Hall of Fame (Leaderboard).</p>
+                    <p style={{ color: "#770575" }}>🎉 Congratulations! Your name appears in today’s Hall of Fame (Leaderboard).</p>
                   ) : (
-                    <p style={{ color: "#ffc0ce" }}>
+                    <p style={{ color: "#1d066a" }}>
                       Good try! Come back tomorrow for a new challenge. The correct answer is option{" "}
                       {question.correctOption + 1}.
                     </p>
@@ -431,8 +448,6 @@ export default function DailyQuestion() {
                   Submit Answer
                 </button>
               )}
-
-              {submitted && <p>Answer submitted ✅</p>}
 
               {/* ✅ SOLUTION (ADDED AT CORRECT PLACE) */}
               {submitted && question.solutions && (
