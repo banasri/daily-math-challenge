@@ -64,15 +64,15 @@ export default function Rewards() {
           <h3 className="section-title">Unlock with Coins (Sample items and More...)</h3>
 
           <div className="rewards-grid">
-            <RewardItem img={tshirt} name="T-Shirt" coins="640" />
-            <RewardItem img={bottle} name="Water Bottle" coins="980" />
-            <RewardItem img={backpack} name="Backpack" coins="1650" />
-            <RewardItem img={watch} name="Watch" coins="2150" />
+            <RewardItem img={tshirt} name="T-Shirt" coins="1350" />
+            <RewardItem img={bottle} name="Water Bottle" coins="1880" />
+            <RewardItem img={backpack} name="Backpack" coins="2250" />
+            <RewardItem img={watch} name="Watch" coins="2750" />
           </div>
         </div>
 
         <p className="coming-soon">Referral rewards coming soon 🚀</p>
-      </div >
+      </div>
     </>
   );
 }
