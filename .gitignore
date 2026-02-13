@@ -13,6 +13,7 @@ node_modules/
 # Firebase admin secrets & scripts
 /scripts/serviceAccountKey.json
 /scripts/*.json
+/scripts/*.xlsx
 
 # env files
 .env
