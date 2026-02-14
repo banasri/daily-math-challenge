@@ -10,6 +10,8 @@ import tshirt from "../assets/tshirt.png";
 import bottle from "../assets/bottle.png";
 import watch from "../assets/watch.png";
 import backpack from "../assets/backpack.png";
+import tumbler from "../assets/tumbler.png";
+import badges from "../assets/badges.png";
 
 export default function Rewards() {
   const { user, logout } = useAuth();
@@ -44,7 +46,7 @@ export default function Rewards() {
     <>
       <AppHeader user={user} streak={streak} coins={0} onLogout={logout} />
       <h2 style={{ marginTop: 20, marginBottom: 0, textAlign: "center" }}>Rewards</h2>
-      <h4 style={{ marginTop: 10, marginBottom: 5, textAlign: "center" }}>🎁 Redeem rewards using your available coins</h4>
+      <h4 style={{ marginTop: 10, marginBottom: 5, textAlign: "center" }}>🎁 Play Smart • Earn Badges • Redeem Rewards with Coins</h4>
       <div className="rewards-page">
         {/* Coins summary */}
         <div className="card stats-card">
@@ -61,13 +63,15 @@ export default function Rewards() {
 
         {/* Rewards */}
         <div className="card rewards-card">
-          <h3 className="section-title">Unlock with Coins (Sample items and More...)</h3>
+          <h3 className="section-title">Badges and Prizes (Sample items and More...)</h3>
 
           <div className="rewards-grid">
+            <RewardItem img={badges} name="Badges" coins="1350" />
             <RewardItem img={tshirt} name="T-Shirt" coins="1350" />
             <RewardItem img={bottle} name="Water Bottle" coins="1880" />
-            <RewardItem img={backpack} name="Backpack" coins="2250" />
             <RewardItem img={watch} name="Watch" coins="2750" />
+            <RewardItem img={backpack} name="Backpack" coins="2250" />
+            <RewardItem img={tumbler} name="Tumbler" coins="1500" />
           </div>
         </div>
 
@@ -81,8 +85,6 @@ function RewardItem({ img, name, coins }) {
   return (
     <div className="reward-item">
       <img src={img} alt={name} />
-      <div className="reward-name">{name}</div>
-      <div className="reward-coins">{coins} coins</div>
     </div>
   );
 }

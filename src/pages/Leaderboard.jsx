@@ -12,6 +12,7 @@ export default function Leaderboard() {
   const [userProfile, setUserProfile] = useState(null);
   const [streak, setStreak] = useState(0);
   const [coins, setCoins] = useState(0);
+  const [activeTab, setActiveTab] = useState("All");
 
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -53,6 +54,11 @@ export default function Leaderboard() {
 
   if (loading) return <p>Loading leaderboard...</p>;
 
+  const filteredEntries =
+    activeTab === "All"
+      ? entries
+      : entries.filter((e) => String(e.grade) === activeTab);
+
   return (
     <>
       {/* 🔝 Shared Header */}
@@ -68,17 +74,31 @@ export default function Leaderboard() {
       >
         ← Back to Today’s Question
       </div> */}
+
       <h2 style={{ marginTop: 20, textAlign: "center" }}>🏆 Today’s Hall of Fame</h2>
+      {/* Tabs */}
+      <div className="leaderboard-tabs">
+        {["All", "6", "7", "8"].map((tab) => (
+          <button
+            key={tab}
+            className={`tab-btn ${activeTab === tab ? "active" : ""}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab === "All" ? "All" : `Grade ${tab}`}
+          </button>
+        ))}
+      </div>
+
       <div className="leaderboard-page">
 
-        {entries.length === 0 ? (
+        {filteredEntries.length === 0 ? (
           <p>
             No correct answers yet today.
             Be the first to solve today’s puzzle! 🚀
           </p>
         ) : (
           <ol style={{ marginTop: 20 }}>
-            {entries.map((e, idx) => (
+            {filteredEntries.map((e, idx) => (
               <li key={idx} style={{ marginBottom: 10 }}>
                 <span style={{ fontWeight: 700 }}>{e.fullName}</span>
                 {e.grade && <span style={{ color: "#97096a" }}> • Grade {e.grade}</span>}
@@ -87,7 +107,7 @@ export default function Leaderboard() {
             ))}
           </ol>
         )}
-      </div >
+      </div>
     </>
   );
 }
