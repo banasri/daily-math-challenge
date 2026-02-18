@@ -5,7 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import Login from "../pages/Login";
 import DailyQuestion from "../pages/DailyQuestion";
 import Profile from "../pages/Profile";
-import Admin from "../pages/Admin";
+import AdminDailyQuestionPreview from "../pages/AdminDailyQuestionPreview";
 import Leaderboard from "../pages/Leaderboard";
 import StreaksAndStats from "../pages/StreaksAndStats";
 import Rewards from "../pages/Rewards";
@@ -49,7 +49,7 @@ export default function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/admin" element={<Admin />} />
+      <Route path="/admin" element={<AdminDailyQuestionPreview />} />
       <Route path="/login" element={<Login />} />
       <Route path="/leaderboard" element={<Leaderboard />} />
 
