@@ -49,7 +49,7 @@ export default function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/admin" element={<AdminDailyQuestionPreview />} />
+      <Route path="/admin34" element={<AdminDailyQuestionPreview />} />
       <Route path="/login" element={<Login />} />
       <Route path="/leaderboard" element={<Leaderboard />} />
 
